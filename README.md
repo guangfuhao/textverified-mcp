@@ -18,6 +18,10 @@ It exposes one complete API escape hatch, `textverified_request`, generated from
 
 The checked-in contract is [`docs/api-v2.openapi.json`](docs/api-v2.openapi.json); the endpoint manifest is [`docs/endpoints.md`](docs/endpoints.md).
 
+### Codex plugin installation
+
+This repository is also packaged as a portable Codex plugin with `plugin.json`, `mcp.json`, and the `textverified-usage` skill. Install it from the repository marketplace or add the local folder to a personal marketplace. The bundled launcher uses the repository virtual environment when available and otherwise falls back to `uv run`; credentials remain environment-only.
+
 ### Authentication
 
 TextVerified v2 requires **both** the account username (the registration email) and the primary API key to mint a short-lived bearer token. Configure them as environment variables:
@@ -90,6 +94,10 @@ MIT. TextVerified is a trademark of its respective owner; this project is an ind
 - 通过通用工具访问当前 v2 的其他全部接口，包括价格、库存、计费、租号、backorder、唤醒请求、webhook 定义和分页链接。
 
 官方文档对应的 OpenAPI 合同保存在 [`docs/api-v2.openapi.json`](docs/api-v2.openapi.json)，接口清单在 [`docs/endpoints.md`](docs/endpoints.md)。
+
+### Codex 插件安装
+
+本仓库同时包含可安装的 Codex 插件包：`plugin.json`、`mcp.json` 和 `textverified-usage` 技能。可以从仓库 marketplace 或个人 marketplace 安装。启动脚本优先使用仓库虚拟环境，否则使用 `uv run`；凭据只通过环境变量注入。
 
 ### 认证配置
 

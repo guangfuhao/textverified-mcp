@@ -1,0 +1,32 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "textverified-mcp",
+  "version": "0.1.0",
+  "description": "TextVerified API v2 access for SMS, voice, verification, rentals, billing, and account workflows.",
+  "author": {
+    "name": "guangfuhao",
+    "url": "https://github.com/guangfuhao"
+  },
+  "homepage": "https://github.com/guangfuhao/textverified-mcp",
+  "repository": "https://github.com/guangfuhao/textverified-mcp",
+  "license": "MIT",
+  "keywords": ["textverified", "sms", "voice", "verification", "mcp", "chatgpt", "claude"],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "TextVerified",
+        "shortDescription": "SMS and voice verification through TextVerified API v2",
+        "longDescription": "Use TextVerified API v2 from Codex for account reads, service discovery, pricing, inventory, verification, SMS, voice, rentals, billing, and other documented workflows.",
+        "developerName": "guangfuhao",
+        "category": "Developer tools",
+        "capabilities": ["Read", "Write"],
+        "websiteURL": "https://app.textverified.com/docs/api/v2",
+        "defaultPrompt": [
+          "Use TextVerified to inspect account balance and services.",
+          "Use TextVerified to manage an explicitly requested SMS or voice verification workflow."
+        ],
+        "brandColor": "#0369A1"
+      }
+    }
+  }
+}

@@ -63,6 +63,7 @@ pytest -q
 
 - `plugin.json`：可移植 Agent Plugins 清单；
 - `mcp.json`：插件内置 stdio MCP server 配置；
+- `.agents/plugins/marketplace.json`：从 GitHub 仓库发现和安装插件的 marketplace 清单；
 - `skills/setup/SKILL.md`：首次安装配置引导；
 - `skills/textverified-usage/SKILL.md`：使用与安全规则；
 - `docs/api-v2.openapi.json`：官方 API v2 OpenAPI 快照；

@@ -1,0 +1,20 @@
+{
+  "name": "textverified-mcp",
+  "interface": {
+    "displayName": "TextVerified Plugins"
+  },
+  "plugins": [
+    {
+      "name": "textverified-mcp",
+      "source": {
+        "source": "local",
+        "path": "./../../"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer tools"
+    }
+  ]
+}

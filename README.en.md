@@ -63,6 +63,7 @@ Tests use a local mock transport and never call TextVerified or purchase a numbe
 
 - `plugin.json`: portable Agent Plugins manifest;
 - `mcp.json`: bundled stdio MCP server configuration;
+- `.agents/plugins/marketplace.json`: marketplace catalog for GitHub discovery and installation;
 - `skills/setup/SKILL.md`: first-install configuration onboarding;
 - `skills/textverified-usage/SKILL.md`: usage and safety rules;
 - `docs/api-v2.openapi.json`: official API v2 OpenAPI snapshot;

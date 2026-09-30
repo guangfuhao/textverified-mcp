@@ -45,7 +45,17 @@ def _advertise_native_settings() -> None:
         settings.setdefault("readTool", "textverified_settings_read")
         settings.setdefault("updateTool", "textverified_settings_update")
         capabilities["openai/settings"] = settings
-        return original(notification_options, capabilities)
+        options = original(notification_options, capabilities)
+        # Newer hosts look for the standardized extension namespace, while
+        # older ChatGPT hosts used the experimental namespace above. The MCP
+        # SDK version used by this plugin only models ``experimental``
+        # explicitly, but its capability model permits extension fields.
+        try:
+            options.capabilities.extensions = {"openai/settings": settings}
+        except (AttributeError, TypeError):
+            # Keep the legacy advertisement working on older SDKs/hosts.
+            pass
+        return options
 
     mcp._mcp_server.create_initialization_options = create_initialization_options
 

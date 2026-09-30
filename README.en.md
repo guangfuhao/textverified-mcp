@@ -21,7 +21,7 @@ Marketplace commands differ between Agent products; the one-sentence request let
 
 ## First-run configuration
 
-After installation, the `textverified-setup` onboarding skill takes the user to a separate **TextVerified plugin settings page** with these fields:
+After installation, the `textverified-setup` onboarding skill guides the user through configuring:
 
 - **TextVerified username**: the registration email for the TextVerified account;
 - **TextVerified API key**: the primary TextVerified API key;
@@ -29,7 +29,7 @@ After installation, the `textverified-setup` onboarding skill takes the user to 
 
 After saving, the plugin stores the credentials in the current user's local configuration with owner-only permissions (`0600`). The API key is always masked when settings are read and is never written to GitHub, README files, chat messages, or tool arguments. CI and headless environments without a settings page can use `TEXTVERIFIED_USERNAME` and `TEXTVERIFIED_API_KEY` environment variables.
 
-On hosts that support OpenAI MCP Extensions, the settings page is rendered natively through the `openai/settings` capability. Other hosts run the onboarding skill and use their secure configuration mechanism.
+On hosts that support OpenAI MCP Extensions, the settings page is rendered natively through the `openai/settings` capability. The current Codex local-plugin details page may show skills without rendering that native form; this does not mean installation failed. In that case, the onboarding skill uses the host's secure configuration mechanism, such as environment variables or a secret store.
 
 ## Capabilities
 

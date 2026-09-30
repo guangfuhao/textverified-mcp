@@ -21,7 +21,7 @@ codex plugin add textverified-mcp
 
 ## 首次配置
 
-插件安装后会通过 `textverified-setup` onboarding skill 引导用户进入独立的 **TextVerified 插件设置页面**，填写：
+插件安装后会通过 `textverified-setup` onboarding skill 引导用户配置：
 
 - **TextVerified username**：TextVerified 注册邮箱；
 - **TextVerified API key**：TextVerified 主 API Key；
@@ -29,7 +29,7 @@ codex plugin add textverified-mcp
 
 保存后，插件把凭据写入当前用户的本地配置文件，并设置为仅文件所有者可读（权限 `0600`）。API Key 在设置读取结果中始终显示为掩码，不会写入 GitHub、README、聊天消息或工具参数。无图形设置页的 CI/headless 环境可以使用 `TEXTVERIFIED_USERNAME` 和 `TEXTVERIFIED_API_KEY` 环境变量。
 
-如果插件宿主支持 OpenAI MCP Extensions，设置页由 `openai/settings` capability 原生渲染；其他宿主会执行 onboarding skill，并提示使用其安全配置方式。
+如果宿主支持 OpenAI MCP Extensions，设置页由 `openai/settings` capability 原生渲染。当前 Codex 的本地插件详情页可能只显示技能而不显示原生表单；这不是安装失败，需按 onboarding skill 使用宿主的安全配置方式（例如环境变量或密钥存储）。
 
 ## 支持能力
 

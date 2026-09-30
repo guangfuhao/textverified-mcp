@@ -8,14 +8,16 @@ description: Configure TextVerified credentials after the plugin is installed.
 Run this onboarding skill immediately after installation, before attempting an
 account read or any SMS/voice operation.
 
-1. Open the **TextVerified plugin settings page** from the installed plugin's
-   details/settings view.
-2. Enter the user's TextVerified registration email in **TextVerified
-   username**.
-3. Enter the user's primary TextVerified API key in **TextVerified API key**.
-4. Keep the default API base URL unless the user explicitly provides another
+1. If the host exposes a **TextVerified plugin settings page**, open it and
+   enter the user's TextVerified registration email and primary API key there.
+2. If the host only shows the plugin's skills (as current Codex local-plugin
+   details may), explain that its native settings form is not exposed by this
+   host and use the host's secure configuration mechanism instead, preferably
+   environment variables or a secret store. Do not claim that a settings page
+   was opened when it was not.
+3. Keep the default API base URL unless the user explicitly provides another
    TextVerified v2 host, then save the settings.
-5. Confirm setup by performing a read-only account request. Never include the
+4. Confirm setup by performing a read-only account request. Never include the
    username or API key in a prompt, tool argument, log, response, repository,
    or Git commit.
 

@@ -29,7 +29,7 @@ After installation, the `textverified-setup` onboarding skill guides the user th
 
 After saving, the plugin stores the credentials in the current user's local configuration with owner-only permissions (`0600`). The API key is always masked when settings are read and is never written to GitHub, README files, chat messages, or tool arguments. CI and headless environments without a settings page can use `TEXTVERIFIED_USERNAME` and `TEXTVERIFIED_API_KEY` environment variables.
 
-On hosts that support OpenAI MCP Extensions, the settings page is rendered natively through the `openai/settings` capability. The current Codex local-plugin details page may show skills without rendering that native form; this does not mean installation failed. In that case, the onboarding skill uses the host's secure configuration mechanism, such as environment variables or a secret store.
+On hosts that support OpenAI MCP Extensions, the settings page is rendered natively through the `openai/settings` capability. The current Codex local-plugin details page may show skills without rendering that native form; in that case, the onboarding skill calls `textverified_setup_local`, which opens a one-shot localhost form and shuts down after saving. CI/headless environments that cannot open the local form can use environment variables or a secret store.
 
 ## Capabilities
 

@@ -29,7 +29,7 @@ codex plugin add textverified-mcp
 
 保存后，插件把凭据写入当前用户的本地配置文件，并设置为仅文件所有者可读（权限 `0600`）。API Key 在设置读取结果中始终显示为掩码，不会写入 GitHub、README、聊天消息或工具参数。无图形设置页的 CI/headless 环境可以使用 `TEXTVERIFIED_USERNAME` 和 `TEXTVERIFIED_API_KEY` 环境变量。
 
-如果宿主支持 OpenAI MCP Extensions，设置页由 `openai/settings` capability 原生渲染。当前 Codex 的本地插件详情页可能只显示技能而不显示原生表单；这不是安装失败，需按 onboarding skill 使用宿主的安全配置方式（例如环境变量或密钥存储）。
+如果宿主支持 OpenAI MCP Extensions，设置页由 `openai/settings` capability 原生渲染。当前 Codex 的本地插件详情页可能只显示技能；此时 onboarding skill 会调用 `textverified_setup_local`，启动一个只监听本机的临时配置页，保存后自动关闭。无法启动本地页的 CI/headless 环境再使用环境变量或密钥存储。
 
 ## 支持能力
 

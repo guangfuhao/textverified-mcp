@@ -130,6 +130,23 @@ def textverified_settings_read() -> SettingsReadResult:
 
 
 @mcp.tool(
+    name="textverified_setup_local",
+    title="Open TextVerified local setup",
+    description="Launch a one-shot localhost form for entering TextVerified credentials. The form closes its service after saving.",
+    annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False, openWorldHint=False),
+)
+def textverified_setup_local(open_browser: bool = True) -> str:
+    """Open the secure local setup page when the host has no native settings UI."""
+
+    from .setup_server import launch_setup_service
+
+    try:
+        return _result(launch_setup_service(open_browser=open_browser))
+    except Exception as exc:
+        return _error(exc)
+
+
+@mcp.tool(
     name="textverified_settings_update",
     title="Save TextVerified settings",
     description="Save TextVerified credentials entered in the plugin settings page.",

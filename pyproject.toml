@@ -1,0 +1,26 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "textverified-mcp"
+version = "0.1.0"
+description = "A secure MCP server and Python client for the complete TextVerified API v2."
+readme = "README.md"
+requires-python = ">=3.10"
+license = {text = "MIT"}
+authors = [{name = "TextVerified MCP community"}]
+keywords = ["mcp", "textverified", "sms", "voice", "phone-verification", "claude", "chatgpt"]
+dependencies = ["httpx>=0.27,<1", "mcp>=1.6,<2"]
+
+[project.scripts]
+textverified-mcp = "textverified_mcp.server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/textverified_mcp"]
+
+[project.optional-dependencies]
+dev = ["pytest>=8,<9"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

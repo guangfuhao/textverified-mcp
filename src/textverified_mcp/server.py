@@ -4,11 +4,53 @@ import json
 import os
 from typing import Any
 
+from pydantic import BaseModel, ConfigDict, Field
 from mcp.server.fastmcp import FastMCP
+from mcp.types import ToolAnnotations
 
 from .client import TextVerifiedClient, TextVerifiedError
+from .credentials import effective_credentials, save_credentials, settings_snapshot
 
 mcp = FastMCP("TextVerified API v2")
+
+
+class SettingsReadResult(BaseModel):
+    """Structured settings payload consumed by the native plugin settings page."""
+
+    model_config = ConfigDict(populate_by_name=True)
+
+    schema_: dict[str, Any] = Field(alias="schema")
+    values: dict[str, Any]
+    layout: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class SettingsUpdateResult(BaseModel):
+    values: dict[str, Any]
+
+
+def _advertise_native_settings() -> None:
+    """Advertise the OpenAI settings extension on older MCP SDK releases.
+
+    The Python MCP SDK exposes experimental capabilities through
+    ``create_initialization_options``. The extension is intentionally injected
+    here instead of depending on a vendor-specific SDK so the plugin remains
+    usable by Claude, Codex, and other MCP hosts.
+    """
+
+    original = mcp._mcp_server.create_initialization_options
+
+    def create_initialization_options(notification_options: Any = None, experimental_capabilities: dict[str, dict[str, Any]] | None = None):
+        capabilities = dict(experimental_capabilities or {})
+        settings = dict(capabilities.get("openai/settings", {}))
+        settings.setdefault("readTool", "textverified_settings_read")
+        settings.setdefault("updateTool", "textverified_settings_update")
+        capabilities["openai/settings"] = settings
+        return original(notification_options, capabilities)
+
+    mcp._mcp_server.create_initialization_options = create_initialization_options
+
+
+_advertise_native_settings()
 
 
 def _client() -> TextVerifiedClient:
@@ -23,6 +65,81 @@ def _error(exc: Exception) -> str:
     if isinstance(exc, TextVerifiedError):
         return json.dumps({"error": str(exc), "status_code": exc.status_code, "details": exc.payload}, ensure_ascii=False, indent=2, default=str)
     return json.dumps({"error": str(exc)}, ensure_ascii=False)
+
+
+@mcp.tool(
+    name="textverified_settings_read",
+    title="TextVerified settings",
+    description="Read the current TextVerified plugin settings. The API key is always masked.",
+    annotations=ToolAnnotations(readOnlyHint=True, destructiveHint=False, openWorldHint=False),
+    structured_output=True,
+)
+def textverified_settings_read() -> SettingsReadResult:
+    """Provide the native plugin settings page with its schema and values."""
+
+    snapshot = settings_snapshot()
+    values = {key: snapshot[key] for key in ("username", "api_key", "base_url")}
+    return SettingsReadResult(
+        schema_={
+            "type": "object",
+            "properties": {
+                "username": {
+                    "type": "string",
+                    "title": "TextVerified username",
+                    "description": "The registration email for your TextVerified account.",
+                    "minLength": 1,
+                },
+                "api_key": {
+                    "type": "string",
+                    "title": "TextVerified API key",
+                    "description": "Your primary API key. It is stored locally and never shown after saving.",
+                    "minLength": 1,
+                },
+                "base_url": {
+                    "type": "string",
+                    "title": "API base URL",
+                    "description": "Leave the default unless TextVerified gives you a different API host.",
+                    "minLength": 1,
+                },
+            },
+            "required": ["username", "api_key"],
+        },
+        values=values,
+        layout=[
+            {
+                "kind": "group",
+                "title": "TextVerified account",
+                "items": [
+                    {"kind": "property", "property": "username"},
+                    {"kind": "property", "property": "api_key"},
+                    {"kind": "property", "property": "base_url"},
+                ],
+            }
+        ],
+    )
+
+
+@mcp.tool(
+    name="textverified_settings_update",
+    title="Save TextVerified settings",
+    description="Save TextVerified credentials entered in the plugin settings page.",
+    annotations=ToolAnnotations(readOnlyHint=False, destructiveHint=False, openWorldHint=False),
+    structured_output=True,
+)
+def textverified_settings_update(set: dict[str, str]) -> SettingsUpdateResult:
+    """Persist settings with owner-only permissions and return masked values."""
+
+    allowed = {"username", "api_key", "base_url"}
+    unknown = set.keys() - allowed
+    if unknown:
+        raise ValueError(f"Unsupported TextVerified settings: {', '.join(sorted(unknown))}")
+    current = effective_credentials()
+    username = set.get("username") or current["username"]
+    api_key = set.get("api_key") or current["api_key"]
+    base_url = set.get("base_url") or current["base_url"] or "https://www.textverified.com"
+    save_credentials(username=username, api_key=api_key, base_url=base_url)
+    snapshot = settings_snapshot()
+    return SettingsUpdateResult(values={key: snapshot[key] for key in ("username", "api_key", "base_url")})
 
 
 @mcp.tool()

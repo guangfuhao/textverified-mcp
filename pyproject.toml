@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "textverified-mcp"
-version = "0.1.0"
+version = "0.2.0"
 description = "A secure MCP server and Python client for the complete TextVerified API v2."
 readme = "README.md"
 requires-python = ">=3.10"

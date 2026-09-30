@@ -11,6 +11,8 @@ from urllib.parse import urljoin, urlparse
 
 import httpx
 
+from .credentials import effective_credentials
+
 
 class TextVerifiedError(RuntimeError):
     """An error returned by TextVerified or by the client configuration."""
@@ -45,9 +47,10 @@ class TextVerifiedClient:
         max_retries: int = 3,
         transport: httpx.BaseTransport | None = None,
     ) -> None:
-        self.username = (username or os.getenv("TEXTVERIFIED_USERNAME", "")).strip()
-        self.api_key = (api_key or os.getenv("TEXTVERIFIED_API_KEY", "")).strip()
-        self.base_url = (base_url or os.getenv("TEXTVERIFIED_BASE_URL", "https://www.textverified.com")).rstrip("/")
+        stored = effective_credentials()
+        self.username = (username or stored["username"]).strip()
+        self.api_key = (api_key or stored["api_key"]).strip()
+        self.base_url = (base_url or stored["base_url"] or "https://www.textverified.com").rstrip("/")
         self.timeout = timeout
         self.max_retries = max(0, max_retries)
         self._token: _Token | None = None
